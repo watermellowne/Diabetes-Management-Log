@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react"
+import { createContext, useCallback, useContext, useState, createElement } from "react"
 import { useToast } from "./use-toast"
 
 const InsulinLogContext = createContext(null)
@@ -46,7 +46,7 @@ export function InsulinLogProvider({ children }) {
 
   const value = { logs, isLoading, createLog, updateLog, deleteLog, isCreating, isUpdating, isDeleting }
 
-  return <InsulinLogContext.Provider value={value}>{children}</InsulinLogContext.Provider>
+  return createElement(InsulinLogContext.Provider, { value }, children)
 }
 
 export function useInsulinLog() {
