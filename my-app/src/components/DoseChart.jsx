@@ -3,7 +3,7 @@ import { useInsulinStats } from "../hooks/useInsulinStats"
 import { Skeleton } from "./ui/skeleton"
 
 const TYPE_COLORS = {
-  "Actrapid-acting": "hsl(142 71% 45%)",
+  "Actrapid": "hsl(217 91% 60%)",
   "Lantus": "hsl(262 52% 60%)",
 }
 

@@ -6,6 +6,7 @@ import LogPage from "./pages/LogPage";
 import ChartsPage from "./pages/ChartsPage";
 import { Activity, ClipboardList, LineChart } from "lucide-react";
 import { clsx } from "clsx";
+import { InsulinLogProvider } from "./hooks/useInsulinLog";
 
 const queryClient = new QueryClient();
 
@@ -57,9 +58,11 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter>
-          <Router />
-        </WouterRouter>
+        <InsulinLogProvider>
+          <WouterRouter>
+            <Router />
+          </WouterRouter>
+        </InsulinLogProvider>
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

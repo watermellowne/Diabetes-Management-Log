@@ -1,7 +1,9 @@
-import { useState, useCallback, useRef } from "react"
+import { createContext, useCallback, useContext, useState } from "react"
 import { useToast } from "./use-toast"
 
-export function useInsulinLog() {
+const InsulinLogContext = createContext(null)
+
+export function InsulinLogProvider({ children }) {
   const { toast } = useToast()
   const [logs, setLogs] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -42,5 +44,13 @@ export function useInsulinLog() {
     }, 500)
   }, [toast])
 
-  return { logs, isLoading, createLog, updateLog, deleteLog, isCreating, isUpdating, isDeleting }
+  const value = { logs, isLoading, createLog, updateLog, deleteLog, isCreating, isUpdating, isDeleting }
+
+  return <InsulinLogContext.Provider value={value}>{children}</InsulinLogContext.Provider>
+}
+
+export function useInsulinLog() {
+  const context = useContext(InsulinLogContext)
+  if (!context) throw new Error("useInsulinLog must be used within InsulinLogProvider")
+  return context
 }
