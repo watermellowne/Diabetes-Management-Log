@@ -15,5 +15,5 @@ A simple React app for tracking glucose readings and insulin doses. It includes 
 - Tailwind CSS + shadcn UI components
 - React Hook Form + Zod validation
 - Recharts for charts
-- html2canvas + jsPDF for exports
+- html-to-image + jsPDF for exports
 - Wouter for routing

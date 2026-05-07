@@ -7,7 +7,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Pencil, Trash2, FileDown, AlertTriangle } from "lucide-react"
 import { useInsulinLog } from "../hooks/useInsulinLog"
 import { useToast } from "../hooks/use-toast"
-import { createColorSafeOnClone } from "../lib/html2canvasSafeClone"
 import { downloadPdf } from "../lib/downloadPdf"
 import EditModal from "./EditModal"
 
@@ -33,11 +32,15 @@ export default function LogTable() {
     if (!tableRef.current) return
     try {
       const { default: jsPDF } = await import("jspdf")
-      const { default: html2canvas } = await import("html2canvas")
-      const canvas = await html2canvas(tableRef.current, { scale: 1.5, useCORS: true, onclone: createColorSafeOnClone() })
-      const imgData = canvas.toDataURL("image/png")
-      const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [canvas.width, canvas.height] })
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height)
+      const { toPng } = await import("html-to-image")
+      const { width, height } = tableRef.current.getBoundingClientRect()
+      const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
+      const exportWidth = Math.ceil(width * pixelRatio)
+      const exportHeight = Math.ceil(height * pixelRatio)
+      const imgData = await toPng(tableRef.current, { cacheBust: true, pixelRatio, backgroundColor: "#ffffff" })
+      const orientation = exportWidth >= exportHeight ? "landscape" : "portrait"
+      const pdf = new jsPDF({ orientation, unit: "px", format: [exportWidth, exportHeight] })
+      pdf.addImage(imgData, "PNG", 0, 0, exportWidth, exportHeight)
       downloadPdf(pdf, "insulin-log.pdf")
     } catch (error) {
       console.error("PDF export failed", error)
