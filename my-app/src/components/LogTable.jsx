@@ -61,8 +61,8 @@ export default function LogTable() {
                 <TableCell><span className={log.safetyAlert === "low" ? "text-amber-700 font-semibold" : log.safetyAlert === "high" ? "text-red-700 font-semibold" : ""}>{log.glucoseReading}</span></TableCell>
                 <TableCell><InsulinTypeBadge type={log.insulinType} /></TableCell>
                 <TableCell>{log.insulinDose}</TableCell>
-                <TableCell className="max-w-[150px] truncate" title={log.activities}>{log.activities || <span className="text-muted-foreground">—</span>}</TableCell>
-                <TableCell className="max-w-[180px] truncate" title={log.notes}>{log.notes || <span className="text-muted-foreground">—</span>}</TableCell>
+                <TableCell className="max-w-37.5 truncate" title={log.activities}>{log.activities || <span className="text-muted-foreground">—</span>}</TableCell>
+                <TableCell className="max-w-45 truncate" title={log.notes}>{log.notes || <span className="text-muted-foreground">—</span>}</TableCell>
                 <TableCell><SafetyBadge alert={log.safetyAlert} /></TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">

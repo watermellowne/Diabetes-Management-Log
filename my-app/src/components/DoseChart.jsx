@@ -3,10 +3,8 @@ import { useInsulinStats } from "../hooks/useInsulinStats"
 import { Skeleton } from "./ui/skeleton"
 
 const TYPE_COLORS = {
-  "Rapid-acting": "hsl(217 91% 60%)",
-  "Long-acting": "hsl(262 52% 60%)",
-  "NPH": "hsl(142 71% 45%)",
-  "Pre-mixed": "hsl(25 95% 53%)",
+  "Actrapid-acting": "hsl(142 71% 45%)",
+  "Lantus": "hsl(262 52% 60%)",
 }
 
 export default function DoseChart() {
