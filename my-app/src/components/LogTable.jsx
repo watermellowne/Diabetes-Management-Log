@@ -27,17 +27,20 @@ export default function LogTable() {
   const [editLog, setEditLog] = useState(null)
   const [deleteId, setDeleteId] = useState(null)
   const tableRef = useRef(null)
+  const EXPORT_CLASS = "export-no-scrollbar"
 
   const handleExportPDF = async () => {
     if (!tableRef.current) return
+    const target = tableRef.current
+    target.classList.add(EXPORT_CLASS)
     try {
       const { default: jsPDF } = await import("jspdf")
       const { toPng } = await import("html-to-image")
-      const { width, height } = tableRef.current.getBoundingClientRect()
+      const { width, height } = target.getBoundingClientRect()
       const pixelRatio = Math.min(2, window.devicePixelRatio || 1)
       const exportWidth = Math.ceil(width * pixelRatio)
       const exportHeight = Math.ceil(height * pixelRatio)
-      const imgData = await toPng(tableRef.current, { cacheBust: true, pixelRatio, backgroundColor: "#ffffff" })
+      const imgData = await toPng(target, { cacheBust: true, pixelRatio, backgroundColor: "#ffffff", style: { overflow: "hidden" } })
       const orientation = exportWidth >= exportHeight ? "landscape" : "portrait"
       const pdf = new jsPDF({ orientation, unit: "px", format: [exportWidth, exportHeight] })
       pdf.addImage(imgData, "PNG", 0, 0, exportWidth, exportHeight)
@@ -45,6 +48,8 @@ export default function LogTable() {
     } catch (error) {
       console.error("PDF export failed", error)
       toast({ title: "Export failed", description: "Unable to generate the PDF. Please try again." })
+    } finally {
+      target.classList.remove(EXPORT_CLASS)
     }
   }
 
