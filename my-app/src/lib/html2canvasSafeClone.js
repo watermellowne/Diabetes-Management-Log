@@ -1,52 +1,42 @@
-const COLOR_PROPS = [
-  "color",
-  "backgroundColor",
-  "borderTopColor",
-  "borderRightColor",
-  "borderBottomColor",
-  "borderLeftColor",
-  "outlineColor",
-  "textDecorationColor",
-  "boxShadow",
-  "textShadow",
-]
-
 const needsColorFix = (value) => /oklab|oklch|color-mix/i.test(value)
 
-const getComputedValue = (value, prop) => {
+const getFallbackValue = (prop) => {
+  const lower = prop.toLowerCase()
+  if (lower.includes("shadow") || lower.includes("background-image")) return "none"
+  if (lower === "fill" || lower === "stroke") return "currentColor"
+  if (lower.includes("color") || lower.includes("background") || lower.includes("border") || lower.includes("outline")) {
+    return "transparent"
+  }
+  return "initial"
+}
+
+const createResolver = (computed) => {
   const temp = document.createElement("span")
   temp.style.position = "absolute"
   temp.style.left = "-9999px"
 
-  if (prop === "backgroundColor") {
-    temp.style.backgroundColor = value
-  } else if (prop.startsWith("border")) {
-    temp.style.borderColor = value
-  } else if (prop === "outlineColor") {
-    temp.style.outlineColor = value
-  } else if (prop === "textDecorationColor") {
-    temp.style.textDecorationColor = value
-  } else if (prop === "boxShadow") {
-    temp.style.boxShadow = value
-  } else if (prop === "textShadow") {
-    temp.style.textShadow = value
-  } else {
-    temp.style.color = value
+  for (let i = 0; i < computed.length; i += 1) {
+    const prop = computed[i]
+    if (!prop.startsWith("--")) continue
+    const value = computed.getPropertyValue(prop)
+    if (value) temp.style.setProperty(prop, value)
   }
 
   document.body.appendChild(temp)
-  const computed = getComputedStyle(temp)
-  let result = computed.color
 
-  if (prop === "backgroundColor") result = computed.backgroundColor
-  if (prop.startsWith("border")) result = computed.borderTopColor
-  if (prop === "outlineColor") result = computed.outlineColor
-  if (prop === "textDecorationColor") result = computed.textDecorationColor
-  if (prop === "boxShadow") result = computed.boxShadow
-  if (prop === "textShadow") result = computed.textShadow
-
-  temp.remove()
-  return result
+  return {
+    resolve(prop, value) {
+      try {
+        temp.style.setProperty(prop, value)
+        return getComputedStyle(temp).getPropertyValue(prop).trim()
+      } catch {
+        return ""
+      }
+    },
+    cleanup() {
+      temp.remove()
+    },
+  }
 }
 
 export const createColorSafeOnClone = () => {
@@ -60,11 +50,20 @@ export const createColorSafeOnClone = () => {
       if (!original || !clone) continue
 
       const computed = getComputedStyle(original)
-      for (const prop of COLOR_PROPS) {
-        const value = computed[prop]
+      const resolver = createResolver(computed)
+
+      for (let j = 0; j < computed.length; j += 1) {
+        const prop = computed[j]
+        if (prop.startsWith("--")) continue
+        const value = computed.getPropertyValue(prop)
         if (!value || !needsColorFix(value)) continue
-        clone.style[prop] = getComputedValue(value, prop)
+
+        const resolved = resolver.resolve(prop, value)
+        const safeValue = resolved && !needsColorFix(resolved) ? resolved : getFallbackValue(prop)
+        clone.style.setProperty(prop, safeValue, computed.getPropertyPriority(prop))
       }
+
+      resolver.cleanup()
     }
   }
 }

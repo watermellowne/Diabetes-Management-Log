@@ -17,7 +17,3 @@ A simple React app for tracking glucose readings and insulin doses. It includes 
 - Recharts for charts
 - html2canvas + jsPDF for exports
 - Wouter for routing
-
-## Notes
-
-- Log entries are stored in memory only. Refreshing the page clears the log. If you want persistence (localStorage or API), that can be added.
