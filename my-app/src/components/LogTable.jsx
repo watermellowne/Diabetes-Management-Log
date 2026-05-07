@@ -6,6 +6,7 @@ import { Skeleton } from "./ui/skeleton"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog"
 import { Pencil, Trash2, FileDown, AlertTriangle } from "lucide-react"
 import { useInsulinLog } from "../hooks/useInsulinLog"
+import { createColorSafeOnClone } from "../lib/html2canvasSafeClone"
 import EditModal from "./EditModal"
 
 function SafetyBadge({ alert }) {
@@ -29,7 +30,7 @@ export default function LogTable() {
     if (!tableRef.current) return
     const { default: jsPDF } = await import("jspdf")
     const { default: html2canvas } = await import("html2canvas")
-    const canvas = await html2canvas(tableRef.current, { scale: 1.5, useCORS: true })
+    const canvas = await html2canvas(tableRef.current, { scale: 1.5, useCORS: true, onclone: createColorSafeOnClone() })
     const imgData = canvas.toDataURL("image/png")
     const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [canvas.width, canvas.height] })
     pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height)

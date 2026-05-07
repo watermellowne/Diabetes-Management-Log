@@ -5,6 +5,7 @@ import { FileDown, LineChart as LineChartIcon, BarChart2 } from "lucide-react"
 import GlucoseChart from "../components/GlucoseChart"
 import DoseChart from "../components/DoseChart"
 import StatsCards from "../components/StatsCards"
+import { createColorSafeOnClone } from "../lib/html2canvasSafeClone"
 
 export default function ChartsPage() {
   const chartsRef = useRef(null)
@@ -12,7 +13,7 @@ export default function ChartsPage() {
     if (!chartsRef.current) return
     const { default: jsPDF } = await import("jspdf")
     const { default: html2canvas } = await import("html2canvas")
-    const canvas = await html2canvas(chartsRef.current, { scale: 1.5, useCORS: true })
+    const canvas = await html2canvas(chartsRef.current, { scale: 1.5, useCORS: true, onclone: createColorSafeOnClone() })
     const imgData = canvas.toDataURL("image/png")
     const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: [canvas.width, canvas.height] })
     pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height)
