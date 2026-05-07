@@ -1,27 +1,23 @@
-# Diabetes Management & Insulin Log
+# Insulin Management Log
 
-A high-performance React-based medical logging tool designed for patients to track daily glucose levels and insulin units, identifying patterns for medical safety.
+A simple React app for tracking glucose readings and insulin doses. It includes a daily log, safety alerts, and a lightweight analytics view with charts and summary cards.
 
 ## Key Features
-* **Structured Data Entry:** Intuitive table interface for logging Glucose (BG) and Insulin units across 4 daily doses (Actrapid/Lantus).
-* **Safety Alerts:** Automated visual flags ( HIGH /  OK) based on glucose thresholds.
-* **Visual Analytics:** Responsive line charts showing glucose trends over time.
-* **Medical Reporting:** One-click PDF export feature to generate reports for doctors.
-* **Privacy First:** Localized data storage ensures user data stays on the device.
 
-##  Tech Stack
-* **Frontend:** React.js (Vite)
-* **Styling:** Tailwind CSS
-* **Charts:** Recharts
-* **PDF Generation:** jsPDF & AutoTable
-* **Deployment:** Vercel
+- Add, edit, and delete glucose and insulin entries
+- Automatic safety alerts: Low (< 70 mg/dL) and High (> 180 mg/dL)
+- Analytics page with glucose trends and average dose by insulin type
+- Export log tables and analytics charts to PDF
 
-##  How to Use
-1. Enter the Date and Glucose/Insulin values in the top input bar.
-2. Click **Add Entry** to save the log to the table.
-3. Monitor the **Safety** column for high-reading warnings.
-4. Scroll down to view the **Glucose Trend** graph.
-5. Use the **Export PDF** button at the top to download a copy for your physician.
+## Tech Stack
 
----
-*Developed as a professional freelance solution for medical data tracking.*
+- React + Vite
+- Tailwind CSS + shadcn UI components
+- React Hook Form + Zod validation
+- Recharts for charts
+- html2canvas + jsPDF for exports
+- Wouter for routing
+
+## Notes
+
+- Log entries are stored in memory only. Refreshing the page clears the log. If you want persistence (localStorage or API), that can be added.

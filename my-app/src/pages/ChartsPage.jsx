@@ -6,18 +6,26 @@ import GlucoseChart from "../components/GlucoseChart"
 import DoseChart from "../components/DoseChart"
 import StatsCards from "../components/StatsCards"
 import { createColorSafeOnClone } from "../lib/html2canvasSafeClone"
+import { downloadPdf } from "../lib/downloadPdf"
+import { useToast } from "../hooks/use-toast"
 
 export default function ChartsPage() {
   const chartsRef = useRef(null)
+  const { toast } = useToast()
   const handleExportPDF = async () => {
     if (!chartsRef.current) return
-    const { default: jsPDF } = await import("jspdf")
-    const { default: html2canvas } = await import("html2canvas")
-    const canvas = await html2canvas(chartsRef.current, { scale: 1.5, useCORS: true, onclone: createColorSafeOnClone() })
-    const imgData = canvas.toDataURL("image/png")
-    const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: [canvas.width, canvas.height] })
-    pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height)
-    pdf.save("insulin-charts.pdf")
+    try {
+      const { default: jsPDF } = await import("jspdf")
+      const { default: html2canvas } = await import("html2canvas")
+      const canvas = await html2canvas(chartsRef.current, { scale: 1.5, useCORS: true, onclone: createColorSafeOnClone() })
+      const imgData = canvas.toDataURL("image/png")
+      const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: [canvas.width, canvas.height] })
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height)
+      downloadPdf(pdf, "insulin-charts.pdf")
+    } catch (error) {
+      console.error("PDF export failed", error)
+      toast({ title: "Export failed", description: "Unable to generate the PDF. Please try again." })
+    }
   }
   return (
     <div className="space-y-6">
