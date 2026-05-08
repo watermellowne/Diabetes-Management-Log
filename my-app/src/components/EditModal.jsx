@@ -9,7 +9,7 @@ import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { useInsulinLog } from "../hooks/useInsulinLog"
 
-const INSULIN_TYPES = ["Actrapid", "Lantus"]
+const INSULIN_TYPES = ["Actrapid", "Lantus", "Amaryl M", "Gliptus Plus"]
 const schema = z.object({
   date: z.string().min(1), time: z.string().min(1),
   glucoseReading: z.coerce.number().positive(), insulinType: z.string().min(1),

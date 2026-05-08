@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useInsulinLog } from "../hooks/useInsulinLog"
 import { Plus } from "lucide-react"
 
-const INSULIN_TYPES = ["Actrapid", "Lantus"]
+const INSULIN_TYPES = ["Actrapid", "Lantus","Amaryl M", "Gliptus Plus"]
 
 const schema = z.object({
   date: z.string().min(1, "Date is required"),

@@ -5,6 +5,8 @@ import { Skeleton } from "./ui/skeleton"
 const TYPE_COLORS = {
   "Actrapid": "hsl(217 91% 60%)",
   "Lantus": "hsl(262 52% 60%)",
+  "Amaryl M": "hsl(142 71% 45%)",
+  "Gliptus Plus": "hsl(25 95% 53%)",
 }
 
 export default function DoseChart() {
